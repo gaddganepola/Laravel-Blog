@@ -15,6 +15,11 @@ Route::post('/login', [UserController::class, 'login'])->middleware('guest');
 
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
 
+Route::get('/manage-avatar', [UserController::class, 'showAvatarForm'])->middleware('mustBeLoggedIn');
+
+Route::post('/manage-avatar', [UserController::class, 'storeAvatar'])->middleware('mustBeLoggedIn');
+
+
 //blog post related routes
 
 Route::get('/create-post', [PostController::class, 'showCreateForm'])->middleware('mustBeLoggedIn');
@@ -32,6 +37,8 @@ Route::put('/post/{post}', [PostController::class, 'actuallyUpdate'])->middlewar
 //profile related routes
 
 Route::get('/profile/{user:username}', [UserController::class, 'profile']);
+
+
 
 Route::get('/admins-only', function (){
     
