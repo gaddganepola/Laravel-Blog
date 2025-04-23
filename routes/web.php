@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
 
 //user related routes
 
@@ -31,3 +32,9 @@ Route::put('/post/{post}', [PostController::class, 'actuallyUpdate'])->middlewar
 //profile related routes
 
 Route::get('/profile/{user:username}', [UserController::class, 'profile']);
+
+Route::get('/admins-only', function (){
+    
+        return "Only Admins Should Be Able to See This Page.";
+    
+})->middleware('can:visitAdminPages');
