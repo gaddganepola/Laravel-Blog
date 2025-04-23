@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     //
+    public function profile (User $user) {
+        $posts = $user->posts()->latest()->get();
+        return view('profile-posts', [
+            'user' => $user, 'posts' => $posts]);
+    }
     public function logout () {
         auth()->logout();
         return redirect('/')->with('success', 'You have successfully logged out');
