@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FollowController;
 
 //user related routes
 
@@ -34,9 +35,21 @@ Route::get('/post/{post}/edit', [PostController::class, 'showEditForm'])->middle
 
 Route::put('/post/{post}', [PostController::class, 'actuallyUpdate'])->middleware('can:update,post');
 
+Route::get('/search/{term}', [PostController::class, 'search']);
+
 //profile related routes
 
 Route::get('/profile/{user:username}', [UserController::class, 'profile']);
+
+Route::get('/profile/{user:username}/followers', [UserController::class, 'profileFollowers']);
+
+Route::get('/profile/{user:username}/following', [UserController::class, 'profileFollowing']);
+
+//follow related routes
+
+Route::post('/create-follow/{user:username}', [FollowController::class, 'createFollow'])->middleware('mustBeLoggedIn');
+
+Route::post('/remove-follow/{user:username}', [FollowController::class, 'removeFollow'])->middleware('mustBeLoggedIn');
 
 
 

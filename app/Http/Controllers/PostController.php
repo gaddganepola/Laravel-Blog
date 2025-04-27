@@ -10,6 +10,11 @@ use Illuminate\Validation\Rules\Can;
 class PostController extends Controller
 {
     //
+    public function search ($term) {
+        $posts = Post::search($term)->get();
+        $posts->load('user:id,username,avatar');
+        return $posts;
+    }
     public function actuallyUpdate (Request $request, Post $post) {
          $incomingRequest = $request->validate([
             'title' => 'required',
