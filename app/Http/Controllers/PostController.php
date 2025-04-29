@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Mail\NewPostEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Can;
 
 class PostController extends Controller
@@ -57,6 +59,8 @@ class PostController extends Controller
         $incomingRequest['user_id'] = auth()->id();
 
         $post = Post::create($incomingRequest);
+
+        Mail::to('test@gmail.com')->send(new NewPostEmail());
         return redirect("/post/{$post->id}")->with('success', 'Your post has been created');
     }
     public function showCreateForm () {

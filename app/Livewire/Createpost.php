@@ -4,6 +4,9 @@ namespace App\Livewire;
 
 use App\Models\Post;
 use Livewire\Component;
+use App\Mail\NewPostEmail;
+use App\Jobs\SendNewPostEmail;
+use Illuminate\Support\Facades\Mail;
 
 class Createpost extends Component
 {
@@ -26,6 +29,10 @@ class Createpost extends Component
         $incomingRequest['user_id'] = auth()->id();
 
         $post = Post::create($incomingRequest);
+
+        dispatch(new SendNewPostEmail(['sendTo' => auth()->user()->email, 'title' => $post->title, 'name' => auth()->user()->username]));
+
+        // Mail::to(auth()->user()->email)->send(new NewPostEmail(['title' => $post->title, 'name' => auth()->user()->username]));
 
         session()->flash('success', 'Your post has been created');
 
