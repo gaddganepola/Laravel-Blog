@@ -89,6 +89,23 @@ class UserController extends Controller
             return view('homepage', ['postCount' => $postCount]);
         }
     }
+
+    public function loginApi (Request $request) {
+        $incomingRequest = $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        if (auth()->attempt($incomingRequest)) {
+            $user = User::where('username', $incomingRequest['username'])->first();
+            $token = $user->createToken('ourapptoken')->plainTextToken;
+            return $token;
+        }
+        
+        return 'sorry';
+
+    }
+
     public function login (Request $request) {
         $incomingRequest = $request->validate([
             'loginusername' => 'required',

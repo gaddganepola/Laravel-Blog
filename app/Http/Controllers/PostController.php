@@ -33,6 +33,14 @@ class PostController extends Controller
     public function showEditForm (Post $post) {
         return view('edit-post', ['post' => $post]);
     }
+
+    public function deleteApi (Post $post) {
+        // if (auth()->user()->cannot('delete', $post)) {
+        //     return redirect('/profile/' . auth()->user()->username)->with('error', 'Your are not able to delete this post');
+        // }
+        $post->delete();
+        return 'deleted';
+    }
     public function delete (Post $post) {
         // if (auth()->user()->cannot('delete', $post)) {
         //     return redirect('/profile/' . auth()->user()->username)->with('error', 'Your are not able to delete this post');
@@ -46,6 +54,23 @@ class PostController extends Controller
         $ourHTML = strip_tags(Str::markdown($post->body), '<p><br><em><strong><h1><h2><h3><h4><h5><h6><ul><li><ol>');
         $post['body'] = $ourHTML;
         return view('view-single-post', ['post' => $post]);
+    }
+
+    public function storeNewPostApi (request $request) {
+        $incomingRequest = $request->validate([
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
+        //strip tags for security can not inject html
+        $incomingRequest['title'] = strip_tags($incomingRequest['title']);
+        $incomingRequest['body'] = strip_tags($incomingRequest['body']);
+        $incomingRequest['user_id'] = auth()->id();
+
+        $post = Post::create($incomingRequest);
+
+        // Mail::to('test@gmail.com')->send(new NewPostEmail());
+        return $post->id;
     }
     public function storeNewPost (request $request) {
         $incomingRequest = $request->validate([
